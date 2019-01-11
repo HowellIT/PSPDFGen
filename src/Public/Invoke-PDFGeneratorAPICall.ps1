@@ -2,7 +2,8 @@ Function Invoke-PDFGeneratorAPICall {
     Param(
         [string]$resource,
         [string]$method,
-        [object]$authParams
+        [ValidateNotNullOrEmpty()]
+        [object]$authParams = (Get-Content C:\tmp\pdf.txt | Convertfrom-Json)
     )
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     $baseuri = 'https://us1.pdfgeneratorapi.com/api/v3'

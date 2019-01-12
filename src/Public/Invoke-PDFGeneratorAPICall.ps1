@@ -1,3 +1,4 @@
+# https://pdfgeneratorapi.com/docs#auth
 Function Invoke-PDFGeneratorAPICall {
     Param(
         [string]$resource,

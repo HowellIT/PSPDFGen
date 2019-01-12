@@ -1,3 +1,4 @@
+# https://pdfgeneratorapi.com/docs#templates-get-all
 Function Get-PDFGenTemplates {
     Param(
 

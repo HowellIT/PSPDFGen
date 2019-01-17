@@ -5,16 +5,21 @@ Function Invoke-PDFGeneratorAPICall {
         [ValidateSet('Get','Post')]
         [string]$method,
         [ValidateNotNullOrEmpty()]
-        [object]$authParams = (Get-Content C:\tmp\pdf.txt | Convertfrom-Json),
+        [ValidateNotNullOrEmpty()]
+        [string]$key = $AuthConfig.key,
+        [ValidateNotNullOrEmpty()]
+        [string]$secret = $AuthConfig.secret,
+        [ValidateNotNullOrEmpty()]
+        [string]$workspace = $AuthConfig.workspace,
         [string]$body
     )
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     $baseuri = 'https://us1.pdfgeneratorapi.com/api/v3'
 
     $headers = @{
-        'X-Auth-Key' = $authParams.key
-        'X-Auth-Secret' = $authParams.secret
-        'X-Auth-Workspace' = $authParams.workspace
+        'X-Auth-Key' = $key
+        'X-Auth-Secret' = $secret
+        'X-Auth-Workspace' = $workspace
         'Content-Type' = 'application/json'
         'Accept' = 'application/json'
     }

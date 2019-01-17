@@ -5,16 +5,21 @@ Function Invoke-PDFGeneratorAPICall {
         [ValidateSet('Get','Post')]
         [string]$method,
         [ValidateNotNullOrEmpty()]
-        [object]$authParams = (Get-Content C:\tmp\pdf.txt | Convertfrom-Json),
+        [ValidateNotNullOrEmpty()]
+        [string]$key = $AuthConfig.key,
+        [ValidateNotNullOrEmpty()]
+        [string]$secret = $AuthConfig.secret,
+        [ValidateNotNullOrEmpty()]
+        [string]$workspace = $AuthConfig.workspace,
         [string]$body
     )
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     $baseuri = 'https://us1.pdfgeneratorapi.com/api/v3'
 
     $headers = @{
-        'X-Auth-Key' = $authParams.key
-        'X-Auth-Secret' = $authParams.secret
-        'X-Auth-Workspace' = $authParams.workspace
+        'X-Auth-Key' = $key
+        'X-Auth-Secret' = $secret
+        'X-Auth-Workspace' = $workspace
         'Content-Type' = 'application/json'
         'Accept' = 'application/json'
     }
@@ -37,11 +42,17 @@ Function Get-PDFGenDocument {
         [string]$Output = 'base64',
         [ValidateNotNullOrEmpty()]
         [string]$FilePath,
-        [switch]$PassThru
+        [switch]$PassThru,
+        [ValidateNotNullOrEmpty()]
+        [string]$key = $AuthConfig.key,
+        [ValidateNotNullOrEmpty()]
+        [string]$secret = $AuthConfig.secret,
+        [ValidateNotNullOrEmpty()]
+        [string]$workspace = $AuthConfig.workspace
     )
     $resource = "templates/$TemplateId/output/?format=$Format"
 
-    $resp = Invoke-PDFGeneratorAPICall -method Post -resource $resource -Body ($Data | ConvertTo-Json -Depth 5)
+    $resp = Invoke-PDFGeneratorAPICall -method Post -resource $resource -Body ($Data | ConvertTo-Json -Depth 5) -key $key -secret $secret -workspace $workspace
 
     $bytes = [Convert]::FromBase64String($resp.response)
     [IO.File]::WriteAllBytes($FilePath, $bytes)
@@ -52,10 +63,30 @@ Function Get-PDFGenDocument {
 # https://pdfgeneratorapi.com/docs#templates-get-all
 Function Get-PDFGenTemplates {
     Param(
-
+        [ValidateNotNullOrEmpty()]
+        [string]$key = $AuthConfig.key,
+        [ValidateNotNullOrEmpty()]
+        [string]$secret = $AuthConfig.secret,
+        [ValidateNotNullOrEmpty()]
+        [string]$workspace = $AuthConfig.workspace
     )
 
-    (Invoke-PDFGeneratorAPICall -resource templates -method Get).response
+    (Invoke-PDFGeneratorAPICall -resource templates -method Get -key $key -secret $secret -workspace $workspace).response
+}
+Function New-PDFGenAuthConfig {
+    Param (
+        [ValidateNotNullOrEmpty()]
+        [string]$key,
+        [ValidateNotNullOrEmpty()]
+        [string]$secret,
+        [ValidateNotNullOrEmpty()]
+        [string]$workspace
+    )
+    $Script:AuthConfig = [pscustomobject] @{
+        key = $key
+        secret = $secret
+        workspace = $workspace
+    }
 }
 <#
 $data = @{

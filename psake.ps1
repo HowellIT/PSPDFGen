@@ -28,6 +28,7 @@ Task Build -depends Clean {
         FunctionsToExport = $FunctionstoExport
         RootModule = "$env:ModuleName.psm1"
         ModuleVersion = $env:ModuleVersion
+        PrivateData = $PrivateData
         #FormatsToProcess = $formatsToExport
     }
     Update-ModuleManifest @moduleManifestData

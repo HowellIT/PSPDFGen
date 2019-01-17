@@ -18,6 +18,7 @@ Create the module's auth:
 ```PowerShell
 New-PDFGenAuthConfig -key <key> -secret <secret> -workspace <workspace>
 ```
+To be able to use this module, you must already have a PDF Generator API account.
 
 **After this is run, the cmdlets no longer require explicit authentication.**
 

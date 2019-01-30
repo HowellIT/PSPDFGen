@@ -2,6 +2,8 @@
 
 This is a PowerShell module to work with PDF Generator API: https://pdfgeneratorapi.com/
 
+To be able to use this module, you must already have a PDF Generator API account.
+
 ## How to set up
 
 Publishing to the PSGallery soon.
@@ -18,7 +20,7 @@ Create the module's auth:
 ```PowerShell
 New-PDFGenAuthConfig -key <key> -secret <secret> -workspace <workspace>
 ```
-To be able to use this module, you must already have a PDF Generator API account.
+**After this is run, the cmdlets no longer require explicit authentication.**
 
 Now you can also save the auth data:
 
@@ -33,8 +35,6 @@ Get-PDFGenAuthConfig
 ```
 
 This stores the info encrypted in your home directory\.pspdfgen\credentials.json (works on PS Core!)
-
-**After this is run, the cmdlets no longer require explicit authentication.**
 
 ## How to use
 

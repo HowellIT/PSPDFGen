@@ -7,7 +7,7 @@ Function New-PDFGenAuthConfig {
         [ValidateNotNullOrEmpty()]
         [string]$workspace
     )
-    $Script:AuthConfig = [pscustomobject] @{
+    $Script:AuthConfig = @{
         key = $key
         secret = $secret
         workspace = $workspace

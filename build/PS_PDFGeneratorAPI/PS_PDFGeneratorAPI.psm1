@@ -1,3 +1,20 @@
+Function Get-PDFGenSavePath {
+    Param (
+
+    )
+    If($PSVersionTable.PSVersion.Major -ge 6){
+        # PS Core
+        If($IsLinux){
+            $saveDir = $env:HOME
+        }ElseIf($IsWindows){
+            $saveDir = $env:USERPROFILE
+        }
+    }Else{
+        # Windows PS
+        $saveDir = $env:USERPROFILE
+    }
+    "$saveDir\.pspdfgen"
+}
 # https://pdfgeneratorapi.com/docs#auth
 Function Invoke-PDFGeneratorAPICall {
     Param(
@@ -28,6 +45,28 @@ Function Invoke-PDFGeneratorAPICall {
         Invoke-RestMethod -Uri "$baseuri/$resource" -Method $method -Headers $headers -Body $body
     }else{
         Invoke-RestMethod -Uri "$baseuri/$resource" -Method $method -Headers $headers
+    }
+}
+Function Get-PDFGenAuthConfig {
+    Param(
+
+    )
+    If($AuthConfig){
+        If(-not ($Silent.IsPresent)){
+            $AuthConfig
+        }
+    }Else{
+        $dir = Get-PDFGenSavePath
+        If(Test-Path $dir\credentials.json){
+            $encryptedAuth = Get-Content $dir\credentials.json | ConvertFrom-Json
+        }
+        $script:AuthConfig = @{}
+        ForEach($property in $encryptedAuth.psobject.Properties){
+            $AuthConfig."$($property.name)" = [pscredential]::New('user',(ConvertTo-SecureString $property.value)).GetNetworkCredential().password
+        }
+        If(-not ($Silent.IsPresent)){
+            $AuthConfig
+        }
     }
 }
 # https://pdfgeneratorapi.com/docs#templates-output
@@ -82,46 +121,26 @@ Function New-PDFGenAuthConfig {
         [ValidateNotNullOrEmpty()]
         [string]$workspace
     )
-    $Script:AuthConfig = [pscustomobject] @{
+    $Script:AuthConfig = @{
         key = $key
         secret = $secret
         workspace = $workspace
     }
 }
-<#
-$data = @{
-    InvoiceNum = '1122334455'
-    InvoiceDate = '01/15/19'
-    DueDate = '02/15/19'
-    Client = @{
-        Name = 'Howell IT, LLC'
-        BillContact = 'Anthony Howell'
-        BillAddrLine1 = '541 Willamette St'
-        BillAddrLine2 = 'Ste 407B'
-        BillCity = 'Eugene'
-        BillState = 'OR'
-        BillZip = '97401'
-        Rate = '$80'
-        BillEmail = 'anthony@howell-it.com'
-    }
-    Line = @(
-        @{
-            Date = '12/12/18'
-            Notes = 'Ticket #5 Worked on computer adding some more text to make a really long example to see how the template performs.'
-            LineQty = '1'
-            LineTotal = '$80'
-        },
-        @{
-            Date = '12/22/18'
-            Notes = 'Ticket #10 Worked on network'
-            LineQty = '1'
-            LineTotal = '$80'
-        })
-    Subtotal = '$80'
-    Discount = '0'
-    Total = '$160'
-}
+Function Save-PDFGenAuthConfig {
+    Param(
 
-$bytes = [Convert]::FromBase64String($d.response)
-[IO.File]::WriteAllBytes('C:\tmp\test.pdf', $bytes)
-#>
+    )
+    $dir = Get-PDFGenSavePath
+    If(-not(Test-Path $dir -PathType Container)){
+        New-Item $dir -ItemType Directory
+    }
+    If(-not(Test-Path $dir\credentials.json -PathType Leaf)){
+        New-Item $dir\credentials.json -ItemType File
+    }
+    $encryptedAuth = @{}
+    ForEach($property in $AuthConfig.GetEnumerator()){
+        $encryptedAuth."$($property.Name)" = (ConvertFrom-SecureString (ConvertTo-SecureString $property.Value -AsPlainText -Force))
+    }
+    $encryptedAuth | ConvertTo-Json | Set-Content $dir\credentials.json
+}

@@ -20,6 +20,20 @@ New-PDFGenAuthConfig -key <key> -secret <secret> -workspace <workspace>
 ```
 To be able to use this module, you must already have a PDF Generator API account.
 
+Now you can also save the auth data:
+
+```PowerShell
+Save-PDFGenAuthConfig
+```
+
+And load it from local storage:
+
+```PowerShell
+Get-PDFGenAuthConfig
+```
+
+This stores the info encrypted in your home directory\.pspdfgen\credentials.json (works on PS Core!)
+
 **After this is run, the cmdlets no longer require explicit authentication.**
 
 ## How to use

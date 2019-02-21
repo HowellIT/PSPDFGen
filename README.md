@@ -1,4 +1,4 @@
-# PS_PDFGeneratorAPI
+# PSPDFGen
 
 This is a PowerShell module to work with PDF Generator API: https://pdfgeneratorapi.com/
 
@@ -11,7 +11,7 @@ Publishing to the PSGallery soon.
 Download or clone this repo and:
 
 ```PowerShell
-Import-module $ModulePath\build\PS_PDFGeneratorAPI
+Import-module $ModulePath\build\PSPDFGen
 ```
 ## How to configure authentication
 

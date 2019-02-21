@@ -6,13 +6,12 @@ To be able to use this module, you must already have a PDF Generator API account
 
 ## How to set up
 
-Publishing to the PSGallery soon.
-
-Download or clone this repo and:
+Install the module from the PowerShell Gallery:
 
 ```PowerShell
-Import-module $ModulePath\build\PSPDFGen
+Install-Module PSPDFGen
 ```
+
 ## How to configure authentication
 
 Create the module's auth:

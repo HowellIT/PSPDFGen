@@ -28,3 +28,7 @@ task ModuleBuild {
     Update-ModuleManifest @moduleManifestData
     Import-Module $modulePath -RequiredVersion $version
 }
+
+task Publish {
+    Invoke-PSDeploy -Path $PSScriptRoot
+}

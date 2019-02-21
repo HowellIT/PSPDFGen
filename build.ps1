@@ -11,4 +11,4 @@ Foreach ($Module in $DependentModules){
     Import-Module $module -ErrorAction Stop
 }
 # Builds the module by invoking psake on the build.psake.ps1 script.
-Invoke-Build $PSScriptRoot -Task $Task
+Invoke-Build "$PSScriptRoot\PSPDFGen.build.ps1" -Task $Task

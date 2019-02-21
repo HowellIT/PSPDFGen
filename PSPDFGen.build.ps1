@@ -30,7 +30,7 @@ task ModuleBuild {
 }
 
 task Publish {
-    Invoke-PSDeploy -Path $PSScriptRoot
+    Invoke-PSDeploy -Path $PSScriptRoot -Force
 }
 
 task All ModuleBuild, Publish

@@ -1,3 +1,5 @@
+[![Build Status](https://dev.azure.com/ThePoShWolf/PSPDFGen/_apis/build/status/PSPDFGen/PSPDFGen-CI?branchName=master)](https://dev.azure.com/ThePoShWolf/PSPDFGen/_build/latest?definitionId=2&branchName=master)
+
 # PSPDFGen
 
 This is a PowerShell module to work with PDF Generator API: https://pdfgeneratorapi.com/

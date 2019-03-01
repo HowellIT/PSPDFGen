@@ -1,11 +1,25 @@
 $srcPath = "$PSScriptRoot\src"
 $buildPath = "$PSScriptRoot\build"
+$docPath = "$PSScriptRoot\docs"
 $moduleName = "PSPDFGen"
 $modulePath = "$buildPath\$moduleName"
 $author = 'Anthony Howell'
-$version = '0.0.1'
+$version = '0.0.2'
 
-task ModuleBuild {
+task Clean {
+    If(Get-Module $moduleName){
+        Remove-Module $moduleName
+    }
+    If(Test-Path $modulePath){
+        $null = Remove-Item $modulePath -Recurse -ErrorAction Ignore
+    }
+}
+
+task DocBuild {
+    New-ExternalHelp $docPath -OutputPath "$modulePath\EN-US"
+}
+
+task ModuleBuild Clean, DocBuild, {
     $pubFiles = Get-ChildItem "$srcPath\public" -Filter *.ps1 -File
     $privFiles = Get-ChildItem "$srcPath\private" -Filter *.ps1 -File
     If(-not(Test-Path $modulePath)){

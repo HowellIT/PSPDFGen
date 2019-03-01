@@ -4,7 +4,7 @@ $docPath = "$PSScriptRoot\docs"
 $moduleName = "PSPDFGen"
 $modulePath = "$buildPath\$moduleName"
 $author = 'Anthony Howell'
-$version = '0.0.1'
+$version = '0.0.2'
 
 task Clean {
     If(Get-Module $moduleName){
